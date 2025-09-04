@@ -24,6 +24,7 @@ namespace SpectrometerStageControlWpf
         #region Class Members
         private MainPresenter presenter;
         private bool updatingDisplay = false;
+        private SpectrometerChart formChart;
         //private FormChart formChart;
         //private Form3dPlot formPlot;
 
@@ -31,8 +32,8 @@ namespace SpectrometerStageControlWpf
         #endregion
         public MainWindow()
         {
-            this.presenter = new MainPresenter();
             InitializeComponent();
+            this.presenter = new MainPresenter();
 
             this.presenter.AddMainView(this);
 
@@ -40,9 +41,46 @@ namespace SpectrometerStageControlWpf
             tmrMain.Tick += tmrMain_Tick;
             tmrMain.Interval = new TimeSpan(0, 0, 0, 0, 50);
 
+            setHandlers();
             RefreshStage();
             RefreshSpectrometer();
             UpdateDisplay();
+        }
+
+        private void setHandlers()
+        {
+            btnStageConnect.Click += btnStageConnect_Click;
+            btnStageDisconnect.Click += btnStageDisconnect_Click;
+            btnStageRefresh.Click += btnStageRefresh_Click;
+            btnSpecConnect.Click += btnSpecConnect_Click;
+            btnSpecDisconnect.Click += btnSpecDisconnect_Click;
+            btnSpecRefresh.Click += btnSpecRefresh_Click;
+
+            btnHome.Click += btnHome_Click;
+            btnContBack.Click += btnContBack_Click;
+            btnContFwd.Click += btnContFwd_Click;
+            btnStop.Click += btnStop_Click;
+            btnMoveByNeg.Click += btnMoveByNeg_Click;
+            btnMoveByPos.Click += btnMoveByPos_Click;
+            btnSetMm.Click += btnSetMm_Click;
+            btnSetMmRange.Click += btnSetMmRange_Click;
+
+            nudTimeFs.ValueChanged += nudTimeFs_ValueChanged;
+            nudTimeRangeFs.ValueChanged += nudTimeRangeFs_ValueChanged;
+            nudStageMoveBy.ValueChanged += nudStageMoveBy_ValueChanged;
+            nudStageRange.ValueChanged += nudStageRange_ValueChanged;
+
+            nudCenterWave.ValueChanged += nudCenterWave_ValueChanged;
+            nudWaveRange.ValueChanged += nudWaveRange_ValueChanged;
+            nudIntegrationUs.ValueChanged += nudIntegrationUs_ValueChanged;
+            nudWaveInc.ValueChanged += nudWaveInc_ValueChanged;
+
+            btnChart.Click += btnChart_Click;
+            btnSpectrumRange.Click += btnSpectrumRange_Click;
+            btnSpectrumFull.Click += btnSpectrumFull_Click;
+
+            btnRun.Click += btnRun_Click;
+            btnTestCsv.Click += btnTestCsv_Click;
         }
 
         #region Interface functions
@@ -283,8 +321,7 @@ namespace SpectrometerStageControlWpf
 
         private void nudTimeFs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            //setMmFromFs();
-            Log($"{nudTimeFs.Value}");
+            setMmFromFs();
         }
 
         private void nudTimeRangeFs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -296,12 +333,9 @@ namespace SpectrometerStageControlWpf
         #region Spectrometer Control
         private void btnChart_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            if (formChart == null || formChart.IsDisposed)
-            formChart = new FormChart(presenter);
-
+            if (formChart == null || !formChart.IsLoaded)
+            formChart = new SpectrometerChart();
             formChart.Show();
-            */
         }
 
         private void btnSpectrumFull_Click(object sender, RoutedEventArgs e)
@@ -355,6 +389,11 @@ namespace SpectrometerStageControlWpf
         }
 
         private void btnTestCsv_Click(object sender, RoutedEventArgs e)
+        {
+            presenter.TestWriteToFile();
+        }
+
+        private void btnRun_Click(object sender, RoutedEventArgs e)
         {
             presenter.TestWriteToFile();
         }
