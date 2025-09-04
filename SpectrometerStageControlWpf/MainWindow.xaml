@@ -1,12 +1,190 @@
-﻿<Window x:Class="SpectrometerStageControlWpf.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpectrometerStageControlWpf"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="SpectrometerStageControlWpf.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="590" Width="816">
     <Grid>
+        <RichTextBox Name="rtbLog" HorizontalAlignment="Left" Height="420" Margin="435,122,0,0" VerticalAlignment="Top" Width="357">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
         
+        <GroupBox Name="gbConnection" Header="Connection" HorizontalAlignment="Left" Height="102" Margin="10,4,0,0" VerticalAlignment="Top" Width="782">
+            <Grid>
+                <ComboBox Name="cbStage" HorizontalAlignment="Left" VerticalAlignment="Top" Width="208" Margin="99,12,0,0"/>
+                <ComboBox Name="cbSpectrometer" HorizontalAlignment="Left" VerticalAlignment="Top" Width="208" Margin="99,43,0,0"/>
+                
+                <Label Content="Stage:" HorizontalAlignment="Left" Margin="52,8,0,0" VerticalAlignment="Top"/>
+                <Label Content="Spectrometer:" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top"/>
+                <Label Name="lblStageConn" Content="Disconnected" HorizontalAlignment="Left" Margin="568,8,0,0" VerticalAlignment="Top"/>
+                <Label Name="lblSpectrometerConn" Content="Disconnected" HorizontalAlignment="Left" Margin="568,42,0,0" VerticalAlignment="Top"/>
+                
+                <Button Name="btnStageConnect" Content="Connect" HorizontalAlignment="Left" Margin="319,13,0,0" VerticalAlignment="Top" Width="74" Click="btnStageConnect_Click"/>
+                <Button Name="btnStageDisconnect" Content="Disconnect" HorizontalAlignment="Left" Margin="398,13,0,0" VerticalAlignment="Top" Width="74" Click="btnStageDisconnect_Click"/>
+                <Button Name="btnStageRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="477,13,0,0" VerticalAlignment="Top" Width="74" Click="btnStageRefresh_Click"/>
+                <Button Name="btnSpecConnect" Content="Connect" HorizontalAlignment="Left" Margin="319,45,0,0" VerticalAlignment="Top" Width="74" Click="btnSpecConnect_Click"/>
+                <Button Name="btnSpecDisconnect" Content="Disconnect" HorizontalAlignment="Left" Margin="398,45,0,0" VerticalAlignment="Top" Width="74" Click="btnSpecDisconnect_Click"/>
+                <Button Name="btnSpecRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="477,45,0,0" VerticalAlignment="Top" Width="74" Click="btnSpecRefresh_Click"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="gbStage" Header="Stage" HorizontalAlignment="Left" Height="204" Margin="10,111,0,0" VerticalAlignment="Top" Width="420">
+            <Grid>
+                <Button Name="btnHome" Content="Home" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="76" Height="32" Click="btnHome_Click"/>
+                <Button Name="btnContBack" Content="Continuous (-)" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="82" Height="32" Click="btnContBack_Click"/>
+                <Button Name="btnContFwd" Content="Continuous (+)" HorizontalAlignment="Left" Margin="185,48,0,0" VerticalAlignment="Top" Width="83" Height="32" Click="btnContFwd_Click"/>
+                <Button Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="98,48,0,0" VerticalAlignment="Top" Width="82" Height="32" Click="btnStop_Click"/>
+                <Button Name="btnMoveByNeg" Content="Move By (-)" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" Width="76" Height="32" Click="btnMoveByNeg_Click"/>
+                <Button Name="btnMoveByPos" Content="Move By (+)" HorizontalAlignment="Left" Margin="91,143,0,0" VerticalAlignment="Top" Width="76" Height="32" Click="btnMoveByPos_Click"/>
+                <Button Name="btnSetMm" Content="Set mm" HorizontalAlignment="Left" Margin="185,88,0,0" VerticalAlignment="Top" Width="39" FontSize="10" Click="btnSetMm_Click"/>
+                <Button Name="btnSetMmRange" Content="Set mm" HorizontalAlignment="Left" Margin="359,88,0,0" VerticalAlignment="Top" Width="39" FontSize="10" RenderTransformOrigin="5.598,0.569" Click="btnSetMmRange_Click"/>
+                
+                <xctk:DoubleUpDown 
+                    Name="nudTimeFs" 
+                    Value="3.00" 
+                    Increment="1" 
+                    Minimum="2.67" 
+                    Maximum="100000" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="82"
+                    Height="23" 
+                    Margin="97,87,0,0" 
+                    FormatString="F2"
+                    ValueChanged="nudTimeFs_ValueChanged"/>
+                <xctk:DoubleUpDown 
+                    Name="nudTimeRangeFs" 
+                    Value="3.00" 
+                    Increment="1" 
+                    Minimum="2.67" 
+                    Maximum="100000" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="82" 
+                    Height="23" 
+                    Margin="275,85,0,0" 
+                    FormatString="F2"
+                    ValueChanged="nudTimeRangeFs_ValueChanged"/>
+                <xctk:DoubleUpDown 
+                    Name="nudStageMoveBy" 
+                    Value="0.000899" 
+                    Increment="0.0001" 
+                    Minimum="0.0008" 
+                    Maximum="100" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="82" 
+                    Height="23" 
+                    Margin="97,115,0,0" 
+                    RenderTransformOrigin="0.502,2" 
+                    FormatString="F6"
+                    ValueChanged="nudStageMoveBy_ValueChanged"/>
+                <xctk:DoubleUpDown 
+                    Name="nudStageRange" 
+                    Value="1.00000" 
+                    Increment="0.0001" 
+                    Minimum="0.0008" 
+                    Maximum="100" 
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Width="82" 
+                    Height="23" 
+                    Margin="316,118,0,0" 
+                    RenderTransformOrigin="0.502,2" 
+                    FormatString="F6"
+                    ValueChanged="nudStageRange_ValueChanged"/>
+                
+                <Label Content="Time (fs)" HorizontalAlignment="Left" Margin="36,85,0,0" VerticalAlignment="Top" FontSize="10"/>
+                <Label Content="Move By (mm)" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" FontSize="10"/>
+                <Label Content="Time (fs)" HorizontalAlignment="Left" Margin="229,85,0,0" VerticalAlignment="Top" FontSize="10"/>
+                <Label Content="State" HorizontalAlignment="Left" Margin="195,-5,0,0" VerticalAlignment="Top" FontSize="10" Height="26"/>
+                <Label Content="Homed" HorizontalAlignment="Left" Margin="242,-5,0,0" VerticalAlignment="Top" FontSize="10" Height="26"/>
+                <Label Content="Current Position (Steps)" HorizontalAlignment="Left" Margin="293,-5,0,0" VerticalAlignment="Top" FontSize="10" Height="26"/>
+                
+                <TextBox Name="txtState" HorizontalAlignment="Left" Height="23" Margin="187,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="49" RenderTransformOrigin="0.503,1.118" FontSize="12" TextAlignment="Center" IsEnabled="False"/>
+                <TextBox Name="txtHomed" HorizontalAlignment="Left" Height="23" Margin="239,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="49" RenderTransformOrigin="0.503,1.118" FontSize="12" TextAlignment="Center" IsEnabled="False"/>
+                <TextBox Name="txtPosition" HorizontalAlignment="Left" Height="23" Margin="311,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="77" RenderTransformOrigin="0.503,1.118" FontSize="12" TextAlignment="Center" IsEnabled="False"/>
+                <TextBlock HorizontalAlignment="Left" Margin="201,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="53" Width="115" FontSize="10" Text="Movement Range (mm) (+/- From Home Position) For Run Button"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="gbSpectrometer" Header="Spectrometer" HorizontalAlignment="Left" Height="170" Margin="10,320,0,0" VerticalAlignment="Top" Width="420">
+            <Grid>
+                <Label Content="Center Wavelength (nm)" HorizontalAlignment="Left" Margin="22,10,0,0" VerticalAlignment="Top"/>
+                <Label Content="Wavelength Range +/- (nm)" HorizontalAlignment="Left" Margin="3,41,0,0" VerticalAlignment="Top"/>
+                <Label Content="Integration Time (us)" HorizontalAlignment="Left" Margin="41,72,0,0" VerticalAlignment="Top"/>
+                <Label Content="Wavelength Increment (nm)" HorizontalAlignment="Left" Margin="251,10,0,0" VerticalAlignment="Top" Visibility="Hidden" IsEnabled="False"/>
+                <Label Content="Capture" HorizontalAlignment="Left" Margin="144,116,0,0" VerticalAlignment="Top"/>
+
+                <xctk:DoubleUpDown 
+                    Name="nudCenterWave"
+                    Value="400" 
+                    Increment="1" 
+                    Minimum="0" 
+                    Maximum="10000" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top"
+                    Width="68" 
+                    Height="23" 
+                    Margin="171,13,0,0" 
+                    RenderTransformOrigin="0.502,2"
+                    ValueChanged="nudCenterWave_ValueChanged"/>
+                <xctk:DoubleUpDown 
+                    Name="nudWaveRange" 
+                    Value="60"
+                    Increment="1" 
+                    Minimum="0" 
+                    Maximum="10000"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top"
+                    Width="68" 
+                    Height="23" 
+                    Margin="171,44,0,0" 
+                    RenderTransformOrigin="0.502,2"
+                    ValueChanged="nudWaveRange_ValueChanged"/>
+                <xctk:DoubleUpDown 
+                    Name="nudIntegrationUs" 
+                    Value="10000" 
+                    Increment="1" 
+                    Minimum="0" 
+                    Maximum="100000" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="68" 
+                    Height="23" 
+                    Margin="171,76,0,0" 
+                    RenderTransformOrigin="0.502,2"
+                    ValueChanged="nudIntegrationUs_ValueChanged"/>
+                <xctk:DoubleUpDown 
+                    Name="nudWaveInc" 
+                    Value="1" 
+                    Increment="0" 
+                    Minimum="0" 
+                    Maximum="10000" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="68" 
+                    Height="23" 
+                    Margin="332,39,0,0" 
+                    RenderTransformOrigin="0.502,2"
+                    ValueChanged="nudWaveInc_ValueChanged"
+                    Visibility="Hidden" 
+                    IsEnabled="False"/>
+
+                <Button Name="btnChart" Content="Chart" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Width="75" Click="btnChart_Click"/>
+                <Button Name="btnSpectrumRange" Content="Spectrum (Range)" HorizontalAlignment="Left" Margin="299,117,0,0" VerticalAlignment="Top" Width="99" Click="btnSpectrumRange_Click"/>
+                <Button Name="btnSpectrumFull" Content="Spectrum (Full)" HorizontalAlignment="Left" Margin="194,117,0,0" VerticalAlignment="Top" Width="99" Click="btnSpectrumFull_Click"/>
+            </Grid>
+        </GroupBox>
+
+        <Button Name="btnRun" Content="Run Set" HorizontalAlignment="Left" Margin="355,503,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="btnTestCsv" Content="Test Csv" HorizontalAlignment="Left" Margin="275,503,0,0" VerticalAlignment="Top" Width="75" Click="btnTestCsv_Click"/>
     </Grid>
 </Window>

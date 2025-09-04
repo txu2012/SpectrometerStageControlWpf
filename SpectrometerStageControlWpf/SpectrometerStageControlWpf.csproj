@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B0EB4874-ECE1-4C53-8193-9CDECE72714D}</ProjectGuid>
+    <ProjectGuid>{B1C6F3FA-712D-4AC8-8113-157DF2FD9825}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SpectrometerStageControlWpf</RootNamespace>
     <AssemblyName>SpectrometerStageControlWpf</AssemblyName>
@@ -14,6 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,7 +36,30 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NetOceanDirect">
+      <HintPath>..\libs\OceanDirect\NetOceanDirect.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -46,9 +71,39 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Thorlabs.MotionControl.DeviceManagerCLI">
+      <HintPath>..\libs\Kinesis\dll\Thorlabs.MotionControl.DeviceManagerCLI.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.MotionControl.GenericMotorCLI">
+      <HintPath>..\libs\Kinesis\dll\Thorlabs.MotionControl.GenericMotorCLI.dll</HintPath>
+    </Reference>
+    <Reference Include="ThorLabs.MotionControl.KCube.DCServoCLI">
+      <HintPath>..\libs\Kinesis\dll\ThorLabs.MotionControl.KCube.DCServoCLI.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.MotionControl.Tools.Common">
+      <HintPath>..\libs\Kinesis\dll\Thorlabs.MotionControl.Tools.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.MotionControl.Tools.Logging">
+      <HintPath>..\libs\Kinesis\dll\Thorlabs.MotionControl.Tools.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -63,6 +118,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Control\DataFile.cs" />
+    <Compile Include="Control\DataTypes.cs" />
+    <Compile Include="Control\FrogDataManager.cs" />
+    <Compile Include="Control\MainPresenter.cs" />
+    <Compile Include="Control\SpectrometerControl.cs" />
+    <Compile Include="Control\StageControl.cs" />
+    <Compile Include="Control\TesterExtension.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -86,6 +148,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -95,4 +158,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(SolutionDir)..\libs\Kinesis\dll\*.dll" "$(TargetDir)" /D /E /Y
+xcopy "$(SolutionDir)..\libs\OceanDirect\*.dll" "$(TargetDir)" /D /E /Y</PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="packages\HarfBuzzSharp.NativeAssets.macOS.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.macOS.targets" Condition="Exists('packages\HarfBuzzSharp.NativeAssets.macOS.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.macOS.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\HarfBuzzSharp.NativeAssets.macOS.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\HarfBuzzSharp.NativeAssets.macOS.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.macOS.targets'))" />
+    <Error Condition="!Exists('packages\HarfBuzzSharp.NativeAssets.Win32.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\HarfBuzzSharp.NativeAssets.Win32.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets'))" />
+    <Error Condition="!Exists('packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
+    <Error Condition="!Exists('packages\SkiaSharp.NativeAssets.Win32.2.88.9\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SkiaSharp.NativeAssets.Win32.2.88.9\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
+  </Target>
+  <Import Project="packages\HarfBuzzSharp.NativeAssets.Win32.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets" Condition="Exists('packages\HarfBuzzSharp.NativeAssets.Win32.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets')" />
+  <Import Project="packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
+  <Import Project="packages\SkiaSharp.NativeAssets.Win32.2.88.9\build\net462\SkiaSharp.NativeAssets.Win32.targets" Condition="Exists('packages\SkiaSharp.NativeAssets.Win32.2.88.9\build\net462\SkiaSharp.NativeAssets.Win32.targets')" />
 </Project>
