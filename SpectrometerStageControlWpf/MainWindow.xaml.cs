@@ -11,6 +11,8 @@ namespace SpectrometerStageControlWpf
     /// </summary>
     public partial class MainWindow : Window, IMainView
     {
+        private const bool enableDebug = true;
+
         #region Class Members
         private MainPresenter presenter;
         private bool updatingDisplay = false;
@@ -116,14 +118,21 @@ namespace SpectrometerStageControlWpf
             lblStageConn.Content = (presenter.StageConnected) ? "Connected" : "Disconnected";
             lblSpectrometerConn.Content = (presenter.SpectrometerConnected) ? "Connected" : "Disconnected";
 
-            /*gbStage.IsEnabled = presenter.StageConnected;
-            gbSpectrometer.IsEnabled = presenter.SpectrometerConnected;
+            if (!enableDebug)
+            {
+                gbStage.IsEnabled = presenter.StageConnected;
+                gbSpectrometer.IsEnabled = presenter.SpectrometerConnected;
 
-            if (gbStage.IsEnabled)
-                UpdateStageDisplay();
+                if (gbStage.IsEnabled)
+                    UpdateStageDisplay();
 
-            if (gbSpectrometer.IsEnabled)
-                UpdateSpectrometerDisplay();*/
+                if (gbSpectrometer.IsEnabled)
+                    UpdateSpectrometerDisplay();
+
+                btnTestCsv.IsEnabled = false;
+                btnTestCsv.Visibility = Visibility.Hidden;
+            }
+
 
             updatingDisplay = false;
         }
