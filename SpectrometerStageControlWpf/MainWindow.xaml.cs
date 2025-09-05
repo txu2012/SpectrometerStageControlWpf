@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace SpectrometerStageControlWpf
 {
@@ -25,8 +15,6 @@ namespace SpectrometerStageControlWpf
         private MainPresenter presenter;
         private bool updatingDisplay = false;
         private SpectrometerChart formChart;
-        //private FormChart formChart;
-        //private Form3dPlot formPlot;
 
         private DispatcherTimer tmrMain;
         #endregion
@@ -45,6 +33,13 @@ namespace SpectrometerStageControlWpf
             RefreshStage();
             RefreshSpectrometer();
             UpdateDisplay();
+            this.Closing += mainWindow_Closing;
+        }
+
+        private void mainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (formChart != null && formChart.IsLoaded)
+                formChart.Close();
         }
 
         private void setHandlers()
@@ -334,7 +329,7 @@ namespace SpectrometerStageControlWpf
         private void btnChart_Click(object sender, RoutedEventArgs e)
         {
             if (formChart == null || !formChart.IsLoaded)
-            formChart = new SpectrometerChart();
+            formChart = new SpectrometerChart(presenter);
             formChart.Show();
         }
 
