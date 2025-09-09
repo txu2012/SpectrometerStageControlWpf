@@ -17,7 +17,6 @@ namespace SpectrometerStageControlWpf
         private MainPresenter presenter;
         private bool updatingDisplay = false;
         private SpectrometerChart formChart;
-        private SurfacePlotter formPlot;
         private SurfacePlotterView formPlotV2;
 
         private DispatcherTimer tmrMain;
@@ -44,9 +43,6 @@ namespace SpectrometerStageControlWpf
         {
             if (formChart != null && formChart.IsLoaded)
                 formChart.Close();
-
-            if (formPlot != null && formPlot.IsLoaded)
-                formPlot.Close();
 
             if (formPlotV2 != null && formPlotV2.IsLoaded)
                 formPlotV2.Close();
@@ -414,9 +410,6 @@ namespace SpectrometerStageControlWpf
 
         private void btnSurfacePlot_Click(object sender, RoutedEventArgs e)
         {
-            if (formPlot == null || !formPlot.IsLoaded)
-                formPlot = new SurfacePlotter(presenter);
-            formPlot.Show();
         }
 
         private void btnSurfacePlotV2_Click(object sender, RoutedEventArgs e)

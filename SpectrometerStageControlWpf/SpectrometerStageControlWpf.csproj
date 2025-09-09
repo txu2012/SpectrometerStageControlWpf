@@ -64,9 +64,6 @@
     <Reference Include="HarfBuzzSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>packages\HarfBuzzSharp.7.3.0.3\lib\net462\HarfBuzzSharp.dll</HintPath>
     </Reference>
-    <Reference Include="HelixToolkit.Wpf, Version=2.27.3.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
-      <HintPath>packages\HelixToolkit.Wpf.2.27.3\lib\net462\HelixToolkit.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="LiveChartsCore, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc92a3e13d40c573, processorArchitecture=MSIL">
       <HintPath>packages\LiveChartsCore.2.0.0-rc5.4\lib\net462\LiveChartsCore.dll</HintPath>
     </Reference>
@@ -185,16 +182,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SurfacePlotter.xaml.cs">
-      <DependentUpon>SurfacePlotter.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SurfacePlotter\SurfacePlotterModel.cs" />
     <Compile Include="SurfacePlotter\SurfacePlotterView.xaml.cs">
       <DependentUpon>SurfacePlotterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SurfacePlot\SurfacePlotModel.cs" />
-    <Compile Include="SurfacePlot\SurfacePlotView.xaml.cs" />
-    <Compile Include="SurfacePlot\SurfacePlotVisual3D.cs" />
     <Page Include="SpectrometerChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,17 +213,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SurfacePlotter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="SurfacePlotter\SurfacePlotterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SurfacePlot\SurfacePlotView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
