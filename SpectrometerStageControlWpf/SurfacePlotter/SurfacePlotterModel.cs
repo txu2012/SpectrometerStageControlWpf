@@ -11,15 +11,15 @@ namespace SpectrometerStageControlWpf
 {
     internal class SurfacePlotterModel : OpenControls.Wpf.Utilities.ViewModel.BaseViewModel
     {
-        public readonly OpenControls.Wpf.SurfacePlot.Model.IConfiguration IConfiguration;
-        private readonly OpenControls.Wpf.SurfacePlot.Model.IConfigurationSerialiser IConfigurationSerialiser;
+        public readonly IConfiguration IConfiguration;
+        private readonly IConfigurationSerialiser IConfigurationSerialiser;
 
         public SurfacePlotterModel()
         {
             IConfigurationSerialiser = new ConfigurationSerialiser();
             (IConfigurationSerialiser as ConfigurationSerialiser).CurrentRegistryKey = OpenRegKey();
 
-            IConfiguration = new OpenControls.Wpf.SurfacePlot.Model.Configuration();
+            IConfiguration = new Configuration();
             Speeds = new ObservableCollection<int>();
             for (int i = 5; i < 1001; i += 5)
             {
@@ -30,7 +30,7 @@ namespace SpectrometerStageControlWpf
 
         private Microsoft.Win32.RegistryKey OpenRegKey()
         {
-            string path = System.Environment.Is64BitOperatingSystem ? @"SOFTWARE\Wow6432Node\OpenControls.Wpf.SurfacePlotDemo" : @"SOFTWARE\OpenControls.Wpf.SurfacePlotDemo";
+            string path = Environment.Is64BitOperatingSystem ? @"SOFTWARE\Wow6432Node\OpenControls.Wpf.SurfacePlotDemo" : @"SOFTWARE\OpenControls.Wpf.SurfacePlotDemo";
             Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(path, true);
             if (key == null)
             {

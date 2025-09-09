@@ -16,6 +16,9 @@ namespace SpectrometerStageControlWpf
     /// </summary>
     public partial class SurfacePlotterView : Window, ILabelFormatter, ISurfacePlotView
     {
+        private const bool useTestData = false;
+        private const bool useTestData2 = false;
+
         private SurfacePlotterModel viewModel;
         private MainPresenter presenter;
         public SurfacePlotterView(MainPresenter presenter)
@@ -27,12 +30,34 @@ namespace SpectrometerStageControlWpf
             btnUpdate.Click += btnUpdate_Click;
             this.presenter = presenter;
 
-            generateInitialTestData();
+            if (useTestData)
+                presenter.FrogDataManager.GenerateTestPlotPoints();
+
+            disableControls(useTestData || useTestData2);
+        }
+
+        private void disableControls(bool toggle)
+        {
+            if (!toggle)
+            {
+                btnStart.IsEnabled = false;
+                btnStop.IsEnabled = false;
+                btnUpdate.IsEnabled = false;
+                cbSpeed.IsEnabled = false;
+
+                btnStart.Visibility = Visibility.Hidden;
+                btnStop.Visibility = Visibility.Hidden;
+                btnUpdate.Visibility = Visibility.Hidden;
+                lblSpeed.Visibility = Visibility.Hidden;
+                cbSpeed.Visibility = Visibility.Hidden;
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             (DataContext as SurfacePlotterModel).Save();
+            Stop();
+
             base.OnClosing(e);
         }
 
@@ -63,7 +88,10 @@ namespace SpectrometerStageControlWpf
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            presenter.FrogDataManager.AppendRandomSpectrumData();
+            if (useTestData)
+            {
+                presenter.FrogDataManager.AppendRandomSpectrumData();
+            }
             UpdateDisplay();
         }
 
@@ -94,26 +122,34 @@ namespace SpectrometerStageControlWpf
                 }
             }
 
-            _surfacePlotControl.SetData(srcData, xMin, xMax, 10, yMin, yMax, 10, zMin, zMax, 10);
+            _surfacePlotControl.SetData(srcData, xMin, xMax, XCount+1, yMin, yMax, 10, zMin, zMax, 10);
         }
                 
-        private void Start()
+        public void Start()
         {
             (DataContext as SurfacePlotterModel).IsRunning = true;
 
-            viewModel = (DataContext as SurfacePlotterModel);
-            _surfacePlotControl.ILabelFormatter = this;
-            _surfacePlotControl.XAxisTitle = "Delay fs (X)";
-            _surfacePlotControl.YAxisTitle = "Wavelength (Y)";
-            _surfacePlotControl.ZAxisTitle = "Intensity (Z)";
+            if (useTestData2 && !useTestData)
+            {
+                runTestModel();
+            }
+            else
+            {
+                viewModel = (DataContext as SurfacePlotterModel);
+                _surfacePlotControl.ILabelFormatter = this;
+                _surfacePlotControl.XAxisTitle = "Delay fs (X)";
+                _surfacePlotControl.YAxisTitle = "Wavelength (Y)";
+                _surfacePlotControl.ZAxisTitle = "Intensity (Z)";
             
-            UpdateDisplay();
+                UpdateDisplay();
+            }
         }
 
         private void Stop()
         {
             (DataContext as SurfacePlotterModel).IsRunning = false;
-            //_task = null;
+            if (useTestData2)
+                _task = null;
         }
 
         #region OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
@@ -136,11 +172,6 @@ namespace SpectrometerStageControlWpf
         #endregion OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
 
         #region Test Functions
-        private void generateInitialTestData()
-        {
-            presenter.FrogDataManager.GenerateTestPlotPoints();
-        }
-
         private void runTestModel2()
         {
             viewModel = (DataContext as SurfacePlotterModel);
@@ -172,7 +203,6 @@ namespace SpectrometerStageControlWpf
 
             //_surfacePlotControl.SetData(srcData, 0, 20, 11, 100, 1000, 11, zMin, zMax, 10);
 
-            generateInitialTestData();
             UpdateDisplay();
         }
 

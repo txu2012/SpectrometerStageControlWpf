@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SpectrometerStageControlWpf"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="SpectrometerStageControlWpf.MainWindow"
         mc:Ignorable="d"
+        KeyDown="Window_KeyDown"
         Title="MainWindow" Height="590" Width="816">
     <Grid>
         <RichTextBox Name="rtbLog" HorizontalAlignment="Left" Height="420" Margin="435,122,0,0" VerticalAlignment="Top" Width="357">
@@ -179,6 +180,5 @@
         <Button Name="btnRun" Content="Run Set" HorizontalAlignment="Left" Margin="355,503,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnTestCsv" Content="Test Csv" HorizontalAlignment="Left" Margin="275,503,0,0" VerticalAlignment="Top" Width="75" />
         <Button Name="btnSurfacePlot" Content="Surface Plot" HorizontalAlignment="Left" Margin="195,503,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Name="btnSurfacePlotV2" Content="Surf. Plot V2" HorizontalAlignment="Left" Margin="115,503,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

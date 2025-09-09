@@ -11,13 +11,13 @@ namespace SpectrometerStageControlWpf
     /// </summary>
     public partial class MainWindow : Window, IMainView
     {
-        private const bool enableDebug = true;
+        private bool enableDebug = true;
 
         #region Class Members
         private MainPresenter presenter;
         private bool updatingDisplay = false;
         private SpectrometerChart formChart;
-        private SurfacePlotterView formPlotV2;
+        private SurfacePlotterView formPlot;
 
         private DispatcherTimer tmrMain;
         #endregion
@@ -44,8 +44,20 @@ namespace SpectrometerStageControlWpf
             if (formChart != null && formChart.IsLoaded)
                 formChart.Close();
 
-            if (formPlotV2 != null && formPlotV2.IsLoaded)
-                formPlotV2.Close();
+            if (formPlot != null && formPlot.IsLoaded)
+                formPlot.Close();
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+                    enableDebug = !enableDebug;
+                    UpdateDisplay();
+            /*switch (e.Key)
+            {
+                case System.Windows.Input.Key.F12:
+                    // Code to execute when F1 is pressed
+                    break;
+            }*/
         }
 
         private void setHandlers()
@@ -83,10 +95,48 @@ namespace SpectrometerStageControlWpf
             btnRun.Click += btnRun_Click;
             btnTestCsv.Click += btnTestCsv_Click;
             btnSurfacePlot.Click += btnSurfacePlot_Click;
-            btnSurfacePlotV2.Click += btnSurfacePlotV2_Click;
         }
 
         #region Interface functions
+        private void toggleDebug()
+        {
+            if (!enableDebug)
+            {
+                gbStage.IsEnabled = presenter.StageConnected;
+                gbSpectrometer.IsEnabled = presenter.SpectrometerConnected;
+
+                if (gbStage.IsEnabled)
+                    UpdateStageDisplay();
+
+                if (gbSpectrometer.IsEnabled)
+                    UpdateSpectrometerDisplay();
+
+                btnTestCsv.IsEnabled = false;
+                btnSurfacePlot.IsEnabled = false;
+                btnRun.IsEnabled = (presenter.StageConnected && presenter.SpectrometerConnected);
+
+                btnTestCsv.Visibility = Visibility.Hidden;
+                btnSurfacePlot.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                gbStage.IsEnabled = true;
+                gbSpectrometer.IsEnabled = true;
+
+                if (gbStage.IsEnabled)
+                    UpdateStageDisplay();
+
+                if (gbSpectrometer.IsEnabled)
+                    UpdateSpectrometerDisplay();
+
+                btnTestCsv.IsEnabled = true;
+                btnSurfacePlot.IsEnabled = true;
+                btnRun.IsEnabled = true;
+
+                btnTestCsv.Visibility = Visibility.Visible;
+                btnSurfacePlot.Visibility = Visibility.Visible;
+            }
+        }
         public void UpdateDisplay() 
         {
             updatingDisplay = true;
@@ -121,24 +171,11 @@ namespace SpectrometerStageControlWpf
                 cbSpectrometer.IsEnabled = true;
             }
 
+
             lblStageConn.Content = (presenter.StageConnected) ? "Connected" : "Disconnected";
             lblSpectrometerConn.Content = (presenter.SpectrometerConnected) ? "Connected" : "Disconnected";
 
-            if (!enableDebug)
-            {
-                gbStage.IsEnabled = presenter.StageConnected;
-                gbSpectrometer.IsEnabled = presenter.SpectrometerConnected;
-
-                if (gbStage.IsEnabled)
-                    UpdateStageDisplay();
-
-                if (gbSpectrometer.IsEnabled)
-                    UpdateSpectrometerDisplay();
-
-                btnTestCsv.IsEnabled = false;
-                btnTestCsv.Visibility = Visibility.Hidden;
-            }
-
+            toggleDebug();
 
             updatingDisplay = false;
         }
@@ -405,18 +442,27 @@ namespace SpectrometerStageControlWpf
 
         private void btnRun_Click(object sender, RoutedEventArgs e)
         {
-            presenter.TestWriteToFile();
+            if (!presenter.SpectrometerConnected || !presenter.StageConnected) return;
+
+            if (formPlot == null || !formPlot.IsLoaded)
+                formPlot = new SurfacePlotterView(presenter);
+            formPlot.Show();
+            formPlot.Start();
+
+            presenter.RunLength(
+                (decimal)nudStageMoveBy.Value,
+                (decimal)nudStageRange.Value,
+                (double)nudCenterWave.Value,
+                (double)nudWaveRange.Value,
+                (long)nudIntegrationUs.Value);
         }
 
         private void btnSurfacePlot_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void btnSurfacePlotV2_Click(object sender, RoutedEventArgs e)
-        {
-            if (formPlotV2 == null || !formPlotV2.IsLoaded)
-                formPlotV2 = new SurfacePlotterView(presenter);
-            formPlotV2.Show();
+            if (formPlot == null || !formPlot.IsLoaded)
+                formPlot = new SurfacePlotterView(presenter);
+            formPlot.Show();
+            formPlot.Start();
         }
     }
 }

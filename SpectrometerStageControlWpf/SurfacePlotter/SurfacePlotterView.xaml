@@ -42,8 +42,8 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Grid.Column="0" x:Name="btnStart" Content="Start" HorizontalAlignment="Left" Width="80" Visibility="{Binding IsRunning, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                 <Button Grid.Row="0" Grid.Column="0" x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Width="80" Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <Label Grid.Row="0" Grid.Column="2" Content="Speed:" Style="{StaticResource LabelStyle}"/>
-                <ComboBox Grid.Row="0" Grid.Column="4" ItemsSource="{Binding Speeds}" SelectedValue="{Binding SelectedSpeed}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                <Label Grid.Row="0" Grid.Column="2" x:Name="lblSpeed" Content="Speed:" Style="{StaticResource LabelStyle}"/>
+                <ComboBox Grid.Row="0" Grid.Column="4" x:Name="cbSpeed" ItemsSource="{Binding Speeds}" SelectedValue="{Binding SelectedSpeed}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"/>
                 <Button Grid.Row="2" Grid.Column="0" x:Name="btnUpdate" Content="Update" HorizontalAlignment="Left" Width="80" />
             </Grid>
         </Border>
