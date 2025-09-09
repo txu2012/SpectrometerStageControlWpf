@@ -14,15 +14,20 @@ namespace SpectrometerStageControlWpf
     /// <summary>
     /// Interaction logic for SurfacePlotterView.xaml
     /// </summary>
-    public partial class SurfacePlotterView : Window, ILabelFormatter
+    public partial class SurfacePlotterView : Window, ILabelFormatter, ISurfacePlotView
     {
-        //private SurfacePlotterModel viewModel;
+        private SurfacePlotterModel viewModel;
+        private MainPresenter presenter;
         public SurfacePlotterView(MainPresenter presenter)
         {
             InitializeComponent();
 
             btnStart.Click += btnStart_Click;
             btnStop.Click += btnStop_Click;
+            btnUpdate.Click += btnUpdate_Click;
+            this.presenter = presenter;
+
+            generateInitialTestData();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -33,7 +38,17 @@ namespace SpectrometerStageControlWpf
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Initialize();
+            viewModel = new SurfacePlotterModel();
+            DataContext = viewModel;
+
+            viewModel.Load();
+            _configurationControl.DataContext = new OpenControls.Wpf.SurfacePlot.ViewModel.ConfigurationControlViewModel(viewModel.IConfiguration);
+            _surfacePlotControl.Initialise(viewModel.IConfiguration);
+        }
+
+        public void UpdateDisplay()
+        {
+            SetData();
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
@@ -46,27 +61,59 @@ namespace SpectrometerStageControlWpf
             Stop();
         }
 
-        private void Initialize()
+        private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            SurfacePlotterModel viewModel = new SurfacePlotterModel();
-            DataContext = viewModel;
-
-            viewModel.Load();
-            _configurationControl.DataContext = new OpenControls.Wpf.SurfacePlot.ViewModel.ConfigurationControlViewModel(viewModel.IConfiguration);
-            _surfacePlotControl.Initialise(viewModel.IConfiguration);
+            presenter.FrogDataManager.AppendRandomSpectrumData();
+            UpdateDisplay();
         }
 
+        private void SetData()
+        {
+            var frogData = presenter.FrogDataManager.FrogData;
+            if (frogData.Count <= 0) return;
+            
+            int XCount = frogData.Count;
+            int YCount = frogData[0].SpectrumData.Wavelengths.Length;
+            
+            float xMax = frogData.Count;
+            float xMin = 0;
+            float yMax = (float)frogData[0].SpectrumData.Wavelengths.Max();
+            float yMin = (float)frogData[0].SpectrumData.Wavelengths.Min();
+            float zMax = (float)frogData[0].SpectrumData.Intensities.Max();
+            float zMin = (float)frogData[0].SpectrumData.Intensities.Min();
 
-        
+            List<List<float>> srcData = new List<List<float>>();
+            for (int i = 0; i < XCount; ++i)
+            {
+                var data = frogData[i].SpectrumData.Intensities;
+                List<float> list = new List<float>();
+                srcData.Add(list);
+                for (int j = 0; j < YCount; ++j)
+                {
+                    list.Add((float)data[j]);
+                }
+            }
+
+            _surfacePlotControl.SetData(srcData, xMin, xMax, 10, yMin, yMax, 10, zMin, zMax, 10);
+        }
+                
         private void Start()
         {
-            runTestModel();
+            (DataContext as SurfacePlotterModel).IsRunning = true;
+
+            viewModel = (DataContext as SurfacePlotterModel);
+            _surfacePlotControl.ILabelFormatter = this;
+            _surfacePlotControl.XAxisTitle = "Delay fs (X)";
+            _surfacePlotControl.YAxisTitle = "Wavelength (Y)";
+            _surfacePlotControl.ZAxisTitle = "Intensity (Z)";
+            
+            UpdateDisplay();
         }
 
         private void Stop()
         {
             (DataContext as SurfacePlotterModel).IsRunning = false;
-            _task = null;
+            //_task = null;
         }
 
         #region OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
@@ -89,10 +136,50 @@ namespace SpectrometerStageControlWpf
         #endregion OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
 
         #region Test Functions
+        private void generateInitialTestData()
+        {
+            presenter.FrogDataManager.GenerateTestPlotPoints();
+        }
+
+        private void runTestModel2()
+        {
+            viewModel = (DataContext as SurfacePlotterModel);
+            _surfacePlotControl.ILabelFormatter = this;
+
+            /*const int XCount = 20;
+            const int YCount = 10;
+            float zMax = 1;
+            float zMin = -1;
+            float scale = 2f * (float)System.Math.PI / (float)XCount;
+
+            Random random = new Random();
+
+            List<List<float>> srcData = new List<List<float>>();
+            for (int i = 0; i < XCount; ++i)
+            {
+                List<float> list = new List<float>();
+                srcData.Add(list);
+                for (int j = 0; j < YCount; ++j)
+                {
+                    list.Add((float)(zMax * System.Math.Sin(scale * i) * System.Math.Sin(scale * j)));
+                    //list.Add((float)random.NextDouble());
+                }
+            }*/
+
+            _surfacePlotControl.XAxisTitle = "Delay fs (X)";
+            _surfacePlotControl.YAxisTitle = "Wavelength (Y)";
+            _surfacePlotControl.ZAxisTitle = "Intensity (Z)";
+
+            //_surfacePlotControl.SetData(srcData, 0, 20, 11, 100, 1000, 11, zMin, zMax, 10);
+
+            generateInitialTestData();
+            UpdateDisplay();
+        }
+
         System.Threading.Tasks.Task _task;
         private void runTestModel()
         {
-            SurfacePlotterModel viewModel = (DataContext as SurfacePlotterModel);
+            viewModel = (DataContext as SurfacePlotterModel);
 
             int algorithm = viewModel.SelectedSpeed;
             int sleepIntervalInMSecs = 1000 / viewModel.SelectedSpeed;
@@ -119,7 +206,6 @@ namespace SpectrometerStageControlWpf
                     for (int j = 0; j < YCount; ++j)
                     {
                         list.Add((float)(zMax * System.Math.Sin(scale * i) * System.Math.Sin(scale * j)));
-                        //list.Add((float)random.NextDouble());
                     }
                 }
 
