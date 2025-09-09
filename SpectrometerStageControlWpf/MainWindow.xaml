@@ -178,5 +178,7 @@
 
         <Button Name="btnRun" Content="Run Set" HorizontalAlignment="Left" Margin="355,503,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnTestCsv" Content="Test Csv" HorizontalAlignment="Left" Margin="275,503,0,0" VerticalAlignment="Top" Width="75" />
+        <Button Name="btnSurfacePlot" Content="Surface Plot" HorizontalAlignment="Left" Margin="195,503,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="btnSurfacePlotV2" Content="Surf. Plot V2" HorizontalAlignment="Left" Margin="115,503,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

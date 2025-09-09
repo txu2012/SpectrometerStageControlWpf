@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace SpectrometerStageControlWpf
 {
@@ -124,6 +125,40 @@ namespace SpectrometerStageControlWpf
                 frogData.Add(new FrogData(i, new SpectrumData(wavelengthsTest, intensitiesTest)));
             }
             
+        }
+
+        public void GenerateTestPlotPoints()
+        {
+            Random random = new Random();
+
+            double[] wavelengthsTest = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+            for (int i = 0; i < 1; ++i)
+            {
+                // Generate different intensities for different delays
+                double[] intensitiesTest = Enumerable
+                    .Repeat(0, 10)
+                    //.Select(j => random.NextDouble())
+                    .Select(j => (double)random.Next(1, 4))
+                    .ToArray();
+
+                frogData.Add(new FrogData(i, new SpectrumData(wavelengthsTest, intensitiesTest)));
+            }
+        }
+        public void AppendRandomSpectrumData()
+        {
+            Random random = new Random();
+
+            double[] wavelengthsTest = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+            // Generate different intensities for different delays
+            double[] intensitiesTest = Enumerable
+                .Repeat(0, 10)
+                //.Select(j => random.NextDouble())
+                .Select(j => (double)random.Next(1, 4))
+                .ToArray();
+
+            frogData.Add(new FrogData(frogData.Count, new SpectrumData(wavelengthsTest, intensitiesTest)));
         }
     }
 }

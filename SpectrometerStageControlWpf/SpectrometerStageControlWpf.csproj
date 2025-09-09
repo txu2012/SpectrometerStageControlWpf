@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.UI.Xaml.2.8.7\build\Microsoft.UI.Xaml.props" Condition="Exists('packages\Microsoft.UI.Xaml.2.8.7\build\Microsoft.UI.Xaml.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -63,6 +64,9 @@
     <Reference Include="HarfBuzzSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>packages\HarfBuzzSharp.7.3.0.3\lib\net462\HarfBuzzSharp.dll</HintPath>
     </Reference>
+    <Reference Include="HelixToolkit.Wpf, Version=2.27.3.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>packages\HelixToolkit.Wpf.2.27.3\lib\net462\HelixToolkit.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="LiveChartsCore, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc92a3e13d40c573, processorArchitecture=MSIL">
       <HintPath>packages\LiveChartsCore.2.0.0-rc5.4\lib\net462\LiveChartsCore.dll</HintPath>
     </Reference>
@@ -77,6 +81,12 @@
     </Reference>
     <Reference Include="NetOceanDirect">
       <HintPath>..\libs\OceanDirect\NetOceanDirect.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp, Version=2.88.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>packages\SkiaSharp.2.88.9\lib\net462\SkiaSharp.dll</HintPath>
@@ -125,6 +135,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -152,6 +163,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xceed.Wpf.AvalonDock, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
@@ -173,6 +185,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SurfacePlotter.xaml.cs">
+      <DependentUpon>SurfacePlotter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SurfacePlotter\SurfacePlotterModel.cs" />
+    <Compile Include="SurfacePlotter\SurfacePlotterView.xaml.cs">
+      <DependentUpon>SurfacePlotterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SurfacePlot\SurfacePlotModel.cs" />
+    <Compile Include="SurfacePlot\SurfacePlotView.xaml.cs" />
+    <Compile Include="SurfacePlot\SurfacePlotVisual3D.cs" />
     <Page Include="SpectrometerChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,6 +222,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SurfacePlotter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SurfacePlotter\SurfacePlotterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SurfacePlot\SurfacePlotView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -219,6 +253,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -227,6 +262,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenControls.Wpf.SurfacePlot\OpenControls.Wpf.SurfacePlot.csproj">
+      <Project>{546d9e1e-3b53-4cfb-9bae-f621bcaa41af}</Project>
+      <Name>OpenControls.Wpf.SurfacePlot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenControls.Wpf.Utilities\OpenControls.Wpf.Utilities.csproj">
+      <Project>{117f1160-81bf-42cd-b48c-e73bec059b30}</Project>
+      <Name>OpenControls.Wpf.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -243,6 +288,7 @@ xcopy "$(SolutionDir)..\libs\OceanDirect\*.dll" "$(TargetDir)" /D /E /Y</PreBuil
     <Error Condition="!Exists('packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
     <Error Condition="!Exists('packages\SkiaSharp.NativeAssets.Win32.2.88.9\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SkiaSharp.NativeAssets.Win32.2.88.9\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
     <Error Condition="!Exists('packages\CommunityToolkit.Mvvm.8.4.0\build\CommunityToolkit.Mvvm.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CommunityToolkit.Mvvm.8.4.0\build\CommunityToolkit.Mvvm.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.UI.Xaml.2.8.7\build\Microsoft.UI.Xaml.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.UI.Xaml.2.8.7\build\Microsoft.UI.Xaml.props'))" />
   </Target>
   <Import Project="packages\HarfBuzzSharp.NativeAssets.Win32.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets" Condition="Exists('packages\HarfBuzzSharp.NativeAssets.Win32.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.Win32.targets')" />
   <Import Project="packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('packages\SkiaSharp.NativeAssets.macOS.2.88.9\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />

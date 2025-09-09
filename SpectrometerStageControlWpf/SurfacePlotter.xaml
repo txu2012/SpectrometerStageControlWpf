@@ -1,0 +1,54 @@
+﻿<Window x:Class="SpectrometerStageControlWpf.SurfacePlotter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SpectrometerStageControlWpf"
+        xmlns:ExtendedToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:SurfacePlotV1="clr-namespace:WPFSurfacePlot3D"
+        mc:Ignorable="d"
+        Title="SurfacePlotter" Height="450" Width="800">
+    <Grid>
+        <Grid>
+            <!--
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="323*" MinWidth="350" />
+                <ColumnDefinition Width="27*"/>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="437*" MinWidth="200" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Margin="0" BorderBrush="AliceBlue" BorderThickness="2" Grid.ColumnSpan="2" />
+            <Border Grid.Column="2" Margin="0" BorderBrush="AliceBlue" BorderThickness="2" />
+
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2">
+                <StackPanel Margin="0">
+                    <TextBlock Text="Plotting Options" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" />
+
+                    <ExtendedToolkit:PropertyGrid 
+                        x:Name="propertyGrid" 
+                        SelectedObject="{Binding}" 
+                        AutoGenerateProperties="True" 
+                        ShowSearchBox="False"
+                        IsCategorized="False"
+                        ShowSortOptions="False"
+                        ShowSummary="False"
+                        ShowTitle="False"
+                        UpdateTextBoxSourceOnEnterKey="True"
+                        IsReadOnly="False"
+                        />
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
+            -->
+
+            <SurfacePlotV1:SurfacePlotView 
+                x:Name="surfacePlotView" 
+                Title="Spectrum" XAxisLabel="Wavelengths" YAxisLabel="Delays" ZAxisLabel="Intensities"
+                />
+            <Button Name="btnRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        </Grid>
+    </Grid>
+</Window>

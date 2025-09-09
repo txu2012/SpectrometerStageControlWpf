@@ -1,0 +1,44 @@
+﻿<Window x:Class="SpectrometerStageControlWpf.SurfacePlotterView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SpectrometerStageControlWpf"
+        xmlns:SurfacePlot="clr-namespace:OpenControls.Wpf.SurfacePlot;assembly=OpenControls.Wpf.SurfacePlot"
+        xmlns:SurfacePlotView="clr-namespace:OpenControls.Wpf.SurfacePlot.View;assembly=OpenControls.Wpf.SurfacePlot"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="SurfacePlotterView" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Grid.Column="0" Margin="0" Background="LightSteelBlue">
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" x:Name="btnStart" Content="Start" HorizontalAlignment="Left" Width="80" Margin="0,-9,0,11"/>
+                <Button Grid.Row="0" Grid.Column="0" x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Width="80" Margin="0,11,0,-9"/>
+                <!-- <Label Grid.Row="0" Grid.Column="2" Content="Speed:" Style="{StaticResource LabelStyle}"/> -->
+                <!-- <ComboBox Grid.Row="0" Grid.Column="4" ItemsSource="{Binding Speeds}" SelectedValue="{Binding SelectedSpeed}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"/> -->
+            </Grid>
+        </Border>
+        <SurfacePlotView:ConfigurationControl Grid.Row="2" Grid.Column="0"  x:Name="_configurationControl" HorizontalAlignment="Stretch" Background="Gainsboro" BorderThickness="0"/>
+        <!--<SurfacePlot:SurfacePlotControl x:Name="_surfacePlotControl"/>-->
+        <WindowsFormsHost Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Margin="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <SurfacePlot:SurfacePlotControl x:Name="_surfacePlotControl"/>
+        </WindowsFormsHost>
+        <!-- <Button Name="btnStart" Content="Start" Grid.ColumnSpan="2" Margin="0,0,717,0"/>
+        <Button Name="btnStop" Grid.ColumnSpan="2" Content="Stop" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="75"/> -->
+    </Grid>
+</Window>

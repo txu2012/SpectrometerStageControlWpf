@@ -17,6 +17,8 @@ namespace SpectrometerStageControlWpf
         private MainPresenter presenter;
         private bool updatingDisplay = false;
         private SpectrometerChart formChart;
+        private SurfacePlotter formPlot;
+        private SurfacePlotterView formPlotV2;
 
         private DispatcherTimer tmrMain;
         #endregion
@@ -42,6 +44,12 @@ namespace SpectrometerStageControlWpf
         {
             if (formChart != null && formChart.IsLoaded)
                 formChart.Close();
+
+            if (formPlot != null && formPlot.IsLoaded)
+                formPlot.Close();
+
+            if (formPlotV2 != null && formPlotV2.IsLoaded)
+                formPlotV2.Close();
         }
 
         private void setHandlers()
@@ -78,6 +86,8 @@ namespace SpectrometerStageControlWpf
 
             btnRun.Click += btnRun_Click;
             btnTestCsv.Click += btnTestCsv_Click;
+            btnSurfacePlot.Click += btnSurfacePlot_Click;
+            btnSurfacePlotV2.Click += btnSurfacePlotV2_Click;
         }
 
         #region Interface functions
@@ -400,6 +410,20 @@ namespace SpectrometerStageControlWpf
         private void btnRun_Click(object sender, RoutedEventArgs e)
         {
             presenter.TestWriteToFile();
+        }
+
+        private void btnSurfacePlot_Click(object sender, RoutedEventArgs e)
+        {
+            if (formPlot == null || !formPlot.IsLoaded)
+                formPlot = new SurfacePlotter(presenter);
+            formPlot.Show();
+        }
+
+        private void btnSurfacePlotV2_Click(object sender, RoutedEventArgs e)
+        {
+            if (formPlotV2 == null || !formPlotV2.IsLoaded)
+                formPlotV2 = new SurfacePlotterView(presenter);
+            formPlotV2.Show();
         }
     }
 }

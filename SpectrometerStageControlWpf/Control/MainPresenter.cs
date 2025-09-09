@@ -18,6 +18,8 @@ namespace SpectrometerStageControlWpf
 
     public interface IChartView : IView { }
 
+    public interface ISurfacePlotView: IView { }
+
     
 
     public class MainPresenter
@@ -47,6 +49,8 @@ namespace SpectrometerStageControlWpf
         public decimal TimeRange_fs { get; set; } = 3335.64m;
 
         private double wavelengthIncrements = 0.2;
+
+        public FrogDataManager FrogDataManager;
         #endregion
 
         public MainPresenter() 
@@ -61,6 +65,7 @@ namespace SpectrometerStageControlWpf
             };
 
             spectrometerDevices = new List<SpectrometerDevice>();
+            FrogDataManager = new FrogDataManager();
         }
 
         #region Connection
@@ -149,7 +154,7 @@ namespace SpectrometerStageControlWpf
 
                 mainView.Log($"Starting set.");
 
-                FrogDataManager fd = new FrogDataManager();
+                FrogDataManager.Clear();
 
                 decimal initialPosition = -moveRange_mm;
                 decimal finalPosition = moveRange_mm;
@@ -167,7 +172,7 @@ namespace SpectrometerStageControlWpf
                 WaitForStage();
 
                 // Get first set of data
-                fd.Append(step, GetSpectrumAtRangeInternal());
+                FrogDataManager.Append(step, GetSpectrumAtRangeInternal());
                 mainView.Log($"Starting from first position.");
 
                 while (Stage.CurrentPosition_mm < finalPosition)
@@ -183,20 +188,20 @@ namespace SpectrometerStageControlWpf
                     step++;
 
                     // Acquire Spectrum range
-                    fd.Append(step, GetSpectrumAtRangeInternal());
+                    FrogDataManager.Append(step, GetSpectrumAtRangeInternal());
                 }
                 mainView.Log($"Finished running set.");
 
                 mainView.Log($"Exporting data to file.");
-                fd.SetHeader(new FrogHeaderData()
+                FrogDataManager.SetHeader(new FrogHeaderData()
                 {
-                    NumDelayPoints = fd.FrogData.Count(),
+                    NumDelayPoints = FrogDataManager.FrogData.Count(),
                     NumWavelengthPoints = Spectrometer.Wavelengths.Length,
                     DelayIncrements = (double)TimeMove_fs,
                     WavelengthIncrements_nm = wavelengthIncrements,
                     WavelengthCenter = CenterWavelength
                 });
-                fd.ExportToFile();
+                FrogDataManager.ExportToFile();
             }
             catch (Exception ex)
             {
