@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.ComponentModel;
 using OpenControls.Wpf.SurfacePlot.Model;
 
 namespace SpectrometerStageControlWpf
@@ -20,13 +16,19 @@ namespace SpectrometerStageControlWpf
     /// </summary>
     public partial class SurfacePlotterView : Window, ILabelFormatter
     {
-        private SurfacePlotterModel viewModel;
+        //private SurfacePlotterModel viewModel;
         public SurfacePlotterView(MainPresenter presenter)
         {
             InitializeComponent();
 
             btnStart.Click += btnStart_Click;
             btnStop.Click += btnStop_Click;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            (DataContext as SurfacePlotterModel).Save();
+            base.OnClosing(e);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -46,7 +48,7 @@ namespace SpectrometerStageControlWpf
 
         private void Initialize()
         {
-            viewModel = new SurfacePlotterModel();
+            SurfacePlotterModel viewModel = new SurfacePlotterModel();
             DataContext = viewModel;
 
             viewModel.Load();
@@ -54,10 +56,43 @@ namespace SpectrometerStageControlWpf
             _surfacePlotControl.Initialise(viewModel.IConfiguration);
         }
 
-        System.Threading.Tasks.Task _task;
+
+        
         private void Start()
         {
-            viewModel = (DataContext as SurfacePlotterModel);
+            runTestModel();
+        }
+
+        private void Stop()
+        {
+            (DataContext as SurfacePlotterModel).IsRunning = false;
+            _task = null;
+        }
+
+        #region OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
+
+        public string XLabel(float x)
+        {
+            return x.ToString("F1");
+        }
+
+        public string YLabel(float y)
+        {
+            return y.ToString("F1");
+        }
+
+        public string ZLabel(float z)
+        {
+            return z.ToString("E2");
+        }
+
+        #endregion OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
+
+        #region Test Functions
+        System.Threading.Tasks.Task _task;
+        private void runTestModel()
+        {
+            SurfacePlotterModel viewModel = (DataContext as SurfacePlotterModel);
 
             int algorithm = viewModel.SelectedSpeed;
             int sleepIntervalInMSecs = 1000 / viewModel.SelectedSpeed;
@@ -74,6 +109,8 @@ namespace SpectrometerStageControlWpf
                 float zMin = -160;
                 float scale = 2f * (float)System.Math.PI / (float)XCount;
 
+                Random random = new Random();
+
                 List<List<float>> srcData = new List<List<float>>();
                 for (int i = 0; i < XCount; ++i)
                 {
@@ -82,6 +119,7 @@ namespace SpectrometerStageControlWpf
                     for (int j = 0; j < YCount; ++j)
                     {
                         list.Add((float)(zMax * System.Math.Sin(scale * i) * System.Math.Sin(scale * j)));
+                        //list.Add((float)random.NextDouble());
                     }
                 }
 
@@ -124,36 +162,6 @@ namespace SpectrometerStageControlWpf
             }));
             _task.Start();
         }
-
-        private void Stop()
-        {
-            (DataContext as SurfacePlotterModel).IsRunning = false;
-            _task = null;
-        }
-
-        private void SetData()
-        {
-            List<List<float>> data = new List<List<float>>();
-            _surfacePlotControl.SetData(data, 100, 1000, 10, 0, 1, 10, 1, 10, 10);
-        }
-
-        #region OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
-
-        public string XLabel(float x)
-        {
-            return x.ToString("F1");
-        }
-
-        public string YLabel(float y)
-        {
-            return y.ToString("F1");
-        }
-
-        public string ZLabel(float z)
-        {
-            return z.ToString("E2");
-        }
-
-        #endregion OpenControls.Wpf.SurfacePlot.Model.ILabelFormatter
+        #endregion
     }
 }

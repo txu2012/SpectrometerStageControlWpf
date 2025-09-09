@@ -30,7 +30,7 @@ namespace SpectrometerStageControlWpf
 
         private Microsoft.Win32.RegistryKey OpenRegKey()
         {
-            string path = System.Environment.Is64BitOperatingSystem ? @"SOFTWARE\Wow6432Node\SpectrometerStageControlWpf" : @"SOFTWARE\SpectrometerStageControlWpf";
+            string path = System.Environment.Is64BitOperatingSystem ? @"SOFTWARE\Wow6432Node\OpenControls.Wpf.SurfacePlotDemo" : @"SOFTWARE\OpenControls.Wpf.SurfacePlotDemo";
             Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(path, true);
             if (key == null)
             {
