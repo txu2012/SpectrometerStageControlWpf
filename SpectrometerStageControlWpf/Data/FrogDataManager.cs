@@ -60,37 +60,46 @@ namespace SpectrometerStageControlWpf
             DataFile.WriteToFile(header, frogData);
         }
 
-        public List<List<float>> ToPlotFormat()
+        public List<List<float>> ToPlotFormat(
+            out float xMin, out float xMax, out int xCount,
+            out float yMin, out float yMax, out int yCount,
+            out float zMin, out float zMax, out int zCount,
+            bool normalize = false)
         {
-            if (frogData.Count <= 0) return new List<List<float>>();
-            int xCount = frogData.Count;
-            int yCount = frogData[0].SpectrumData.Wavelengths.Length;
-            int counter = 0;
-            List<List<float>> plotSrc = new List<List<float>>();
-            List<List<float>> drawPlot = new List<List<float>>();
+            xMax = xMin = xCount = 0;
+            yMax = yMin = yCount = 0;
+            zMax = zMin = zCount = 0;
 
-            foreach(var data in frogData)
-            {
-                plotSrc.Add(Array.ConvertAll(data.SpectrumData.Intensities, x => (float)x).ToList());
-            }
-            
+            if (frogData.Count <= 0)
+                return new List<List<float>>();
+
+            xCount = frogData.Count;
+            yCount = frogData[0].SpectrumData.Wavelengths.Length;
+            zCount = frogData[0].SpectrumData.Intensities.Length;
+
+            List<List<float>> srcData = new List<List<float>>();
             for (int i = 0; i < xCount; ++i)
             {
-                int offset = i + counter;
-                while (offset >= xCount)
-                {
-                    offset -= xCount;
-                }
-
+                var data = frogData[i];
                 List<float> list = new List<float>();
-                drawPlot.Add(list);
+                srcData.Add(list);
+
+                xMin = (data.Delay_fs < xMin) ? data.Delay_fs : xMin;
+                xMax = (data.Delay_fs > xMax) ? data.Delay_fs : xMax;
+                yMin = (float)data.MinWavelength;
+                yMax = (float)data.MaxWavelength;
+                zMin = (float)data.MinIntensity;
+                zMax = (float)data.MaxIntensity;
+
                 for (int j = 0; j < yCount; ++j)
                 {
-                    list.Add(plotSrc[offset][j]);
+                    list.Add(normalize 
+                        ? (float)data.SpectrumData.Intensities[j] 
+                        : (float)data.SpectrumData.IntensitiesNormalized[j]);
                 }
             }
 
-            return drawPlot;
+            return srcData;
         }
 
         public (float, float) GetMinMaxIntensity()
@@ -101,6 +110,7 @@ namespace SpectrometerStageControlWpf
             return (min, max);
         }
 
+        #region Testing functions
         public void GenerateTestData()
         {
             Random random = new Random();
@@ -160,5 +170,6 @@ namespace SpectrometerStageControlWpf
 
             frogData.Add(new FrogData(frogData.Count, new SpectrumData(wavelengthsTest, intensitiesTest)));
         }
+        #endregion
     }
 }

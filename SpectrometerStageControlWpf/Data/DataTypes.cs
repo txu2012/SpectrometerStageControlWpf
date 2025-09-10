@@ -79,11 +79,19 @@ namespace SpectrometerStageControlWpf
     {
         public readonly int Delay_fs;
         public readonly SpectrumData SpectrumData;
+        public readonly double MinWavelength;
+        public readonly double MaxWavelength;
+        public readonly double MinIntensity;
+        public readonly double MaxIntensity;
 
         public FrogData(int delay, SpectrumData data)
         {
             Delay_fs = delay;
             SpectrumData = data;
+            MinWavelength = data.Wavelengths.Min();
+            MaxWavelength = data.Wavelengths.Max();
+            MinIntensity = data.Intensities.Min();
+            MaxIntensity = data.Intensities.Max();
         }
     }
 }

@@ -111,32 +111,14 @@ namespace SpectrometerStageControlWpf
 
         private void SetData()
         {
-            var frogData = presenter.FrogDataManager.FrogData;
-            if (frogData.Count <= 0) return;
-            
-            int XCount = frogData.Count;
-            int YCount = frogData[0].SpectrumData.Wavelengths.Length;
-            
-            float xMax = frogData.Count;
-            float xMin = 0;
-            float yMax = (float)frogData[0].SpectrumData.Wavelengths.Max();
-            float yMin = (float)frogData[0].SpectrumData.Wavelengths.Min();
-            float zMax = (float)frogData[0].SpectrumData.Intensities.Max();
-            float zMin = (float)frogData[0].SpectrumData.Intensities.Min();
+            if (presenter.FrogDataManager.FrogData.Count <= 0) return;
 
-            List<List<float>> srcData = new List<List<float>>();
-            for (int i = 0; i < XCount; ++i)
-            {
-                var data = frogData[i].SpectrumData.Intensities;
-                List<float> list = new List<float>();
-                srcData.Add(list);
-                for (int j = 0; j < YCount; ++j)
-                {
-                    list.Add((float)data[j]);
-                }
-            }
+            var srcData = presenter.FrogDataManager.ToPlotFormat(
+                out float xMin, out float xMax, out int xCount,
+                out float yMin, out float yMax, out int yCount,
+                out float zMin, out float zMax, out int zCount);
 
-            _surfacePlotControl.SetData(srcData, xMin, xMax, XCount+1, yMin, yMax, 10, zMin, zMax, 10);
+            _surfacePlotControl.SetData(srcData, xMin, xMax, xCount, yMin, yMax, yCount, zMin, zMax, zCount);
         }
                 
         public void Start()
