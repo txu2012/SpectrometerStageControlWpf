@@ -17,7 +17,7 @@ namespace SpectrometerStageControlWpf
         #region Class Members
         private MainPresenter presenter;
         private bool updatingDisplay = false;
-        private SpectrometerChart formChart;
+        private SpectrometerView formChart;
         private SurfacePlotterView formPlot;
 
         private DispatcherTimer tmrMain;
@@ -373,7 +373,7 @@ namespace SpectrometerStageControlWpf
         private void btnChart_Click(object sender, RoutedEventArgs e)
         {
             if (formChart == null || !formChart.IsLoaded)
-            formChart = new SpectrometerChart(presenter);
+            formChart = new SpectrometerView(presenter);
             formChart.Show();
         }
 

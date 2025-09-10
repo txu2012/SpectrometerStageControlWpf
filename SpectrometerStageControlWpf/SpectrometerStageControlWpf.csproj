@@ -186,7 +186,7 @@
     <Compile Include="Charts\SurfacePlotterView.xaml.cs">
       <DependentUpon>SurfacePlotterView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Charts\SpectrometerChart.xaml">
+    <Page Include="Charts\SpectrometerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,17 +198,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Control\SpectrometerViewModel.cs" />
-    <Compile Include="Charts\SpectrometerChart.xaml.cs">
-      <DependentUpon>SpectrometerChart.xaml</DependentUpon>
+    <Compile Include="Charts\SpectrometerModel.cs" />
+    <Compile Include="Charts\SpectrometerView.xaml.cs">
+      <DependentUpon>SpectrometerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Control\DataFile.cs" />
-    <Compile Include="Control\DataTypes.cs" />
-    <Compile Include="Control\FrogDataManager.cs" />
-    <Compile Include="Control\MainPresenter.cs" />
+    <Compile Include="Data\DataFile.cs" />
+    <Compile Include="Data\DataTypes.cs" />
+    <Compile Include="Data\FrogDataManager.cs" />
+    <Compile Include="Data\MainPresenter.cs" />
     <Compile Include="Control\SpectrometerControl.cs" />
     <Compile Include="Control\StageControl.cs" />
-    <Compile Include="Control\TesterExtension.cs" />
+    <Compile Include="Data\TesterExtension.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

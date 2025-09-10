@@ -16,9 +16,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SpectrometerStageControlWpf
 {
-    public partial class SpectrometerViewModel : ObservableObject
+    public partial class SpectrometerModel : ObservableObject
     {
-        public SpectrometerViewModel(MainPresenter presenter) 
+        public SpectrometerModel(MainPresenter presenter) 
         {
             this.presenter = presenter;
             UpdateData();

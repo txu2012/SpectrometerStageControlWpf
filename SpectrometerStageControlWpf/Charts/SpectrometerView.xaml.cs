@@ -12,7 +12,7 @@ namespace SpectrometerStageControlWpf
     /// <summary>
     /// Interaction logic for Chart.xaml
     /// </summary>
-    public partial class SpectrometerChart : Window, IChartView
+    public partial class SpectrometerView : Window, IChartView
     {
         public bool enableDebug = false;
 
@@ -22,15 +22,15 @@ namespace SpectrometerStageControlWpf
 
         public object Sync { get; } = new object();
         private bool range;
-        private SpectrometerViewModel viewModel;
+        private SpectrometerModel viewModel;
 
-        public SpectrometerChart(MainPresenter presenter, bool range = false)
+        public SpectrometerView(MainPresenter presenter, bool range = false)
         {
             InitializeComponent();
             this.MainPresenter = presenter;
             this.range = range;
 
-            viewModel = new SpectrometerViewModel(this.MainPresenter);
+            viewModel = new SpectrometerModel(this.MainPresenter);
 
             if (enableDebug && (chkTestData.IsChecked ?? false))
                 viewModel.InitializeChart(0, 800, 0, 800);
@@ -43,7 +43,7 @@ namespace SpectrometerStageControlWpf
 
             lvcSpectrometerChart.DataContext = viewModel;
 
-            btnUpdate.Click += btnUpdate_Click;
+            btnAcquire.Click += btnAcquire_Click;
             chkNormalized.Checked += chkNormalized_ToggleChecked;
             chkNormalized.Unchecked += chkNormalized_ToggleChecked;
             chkTestData.Checked += chkTestData_ToggleChecked;
@@ -65,7 +65,7 @@ namespace SpectrometerStageControlWpf
             }
         }
 
-        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        private void btnAcquire_Click(object sender, RoutedEventArgs e)
         {
             if (tmrUpdate.IsEnabled)
                 tmrUpdate.IsEnabled = false;
@@ -76,19 +76,6 @@ namespace SpectrometerStageControlWpf
         private void chkNormalized_ToggleChecked(object sender, RoutedEventArgs e)
         {
             viewModel.UpdateChartAxes(MainPresenter.SpectrumData, chkNormalized.IsChecked ?? false);
-        }
-
-        private void chkTestData_ToggleChecked(object sender, RoutedEventArgs e)
-        {
-            if (enableDebug && (chkTestData.IsChecked ?? false))
-            {
-                viewModel.UpdateChartAxes(0, 800, 100, 0, 800, 100);
-                UpdateData();
-            }
-            else
-            {
-                viewModel.UpdateChartAxes(MainPresenter.SpectrumData, chkNormalized.IsChecked ?? false);
-            }
         }
 
         public void UpdateDisplay()
@@ -105,6 +92,8 @@ namespace SpectrometerStageControlWpf
                 chkTestData.Visibility = Visibility.Hidden;
                 chkTestData.IsEnabled = false;
             }
+
+            btnAcquire.IsEnabled = MainPresenter.SpectrometerConnected || (enableDebug && (chkTestData.IsChecked ?? false));
         }
 
         private void tmrUpdate_Tick(object sender, EventArgs e)
@@ -165,6 +154,21 @@ namespace SpectrometerStageControlWpf
                 index = 0;
             else
                 index++;
+        }
+
+        private void chkTestData_ToggleChecked(object sender, RoutedEventArgs e)
+        {
+            if (enableDebug && (chkTestData.IsChecked ?? false))
+            {
+                viewModel.UpdateChartAxes(0, 800, 100, 0, 800, 100);
+                UpdateData();
+            }
+            else
+            {
+                viewModel.UpdateChartAxes(MainPresenter.SpectrumData, chkNormalized.IsChecked ?? false);
+            }
+
+            btnAcquire.IsEnabled = MainPresenter.SpectrometerConnected || (enableDebug && (chkTestData.IsChecked ?? false));
         }
         #endregion
     }
