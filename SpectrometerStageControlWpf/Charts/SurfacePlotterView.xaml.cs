@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.ComponentModel;
+using System.Windows.Input;
 using OpenControls.Wpf.SurfacePlot.Model;
 
 namespace SpectrometerStageControlWpf
@@ -16,8 +13,7 @@ namespace SpectrometerStageControlWpf
     /// </summary>
     public partial class SurfacePlotterView : Window, ILabelFormatter, ISurfacePlotView
     {
-        private const bool useTestData = false;
-        private const bool useTestData2 = false;
+        private bool enableDebug = false;
 
         private SurfacePlotterModel viewModel;
         private MainPresenter presenter;
@@ -30,10 +26,18 @@ namespace SpectrometerStageControlWpf
             btnUpdate.Click += btnUpdate_Click;
             this.presenter = presenter;
 
-            if (useTestData)
+            if (enableDebug)
                 presenter.FrogDataManager.GenerateTestPlotPoints();
 
-            disableControls(useTestData || useTestData2);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F12 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+            {
+                enableDebug = !enableDebug;
+                UpdateDisplay();
+            }
         }
 
         private void disableControls(bool toggle)
@@ -44,12 +48,21 @@ namespace SpectrometerStageControlWpf
                 btnStop.IsEnabled = false;
                 btnUpdate.IsEnabled = false;
                 cbSpeed.IsEnabled = false;
+                rbTestData1.IsEnabled = false;
+                rbTestData2.IsEnabled = false;
 
-                btnStart.Visibility = Visibility.Hidden;
-                btnStop.Visibility = Visibility.Hidden;
-                btnUpdate.Visibility = Visibility.Hidden;
-                lblSpeed.Visibility = Visibility.Hidden;
-                cbSpeed.Visibility = Visibility.Hidden;
+                bdTester.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                btnStart.IsEnabled = true;
+                btnStop.IsEnabled = true;
+                btnUpdate.IsEnabled = true;
+                cbSpeed.IsEnabled = true;
+                rbTestData1.IsEnabled = true;
+                rbTestData2.IsEnabled = true;
+
+                bdTester.Visibility = Visibility.Visible;
             }
         }
 
@@ -74,6 +87,7 @@ namespace SpectrometerStageControlWpf
         public void UpdateDisplay()
         {
             SetData();
+            disableControls(enableDebug);
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
@@ -88,7 +102,7 @@ namespace SpectrometerStageControlWpf
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (useTestData)
+            if (enableDebug && (rbTestData1.IsChecked ?? false))
             {
                 presenter.FrogDataManager.AppendRandomSpectrumData();
             }
@@ -129,7 +143,7 @@ namespace SpectrometerStageControlWpf
         {
             (DataContext as SurfacePlotterModel).IsRunning = true;
 
-            if (useTestData2 && !useTestData)
+            if (enableDebug && (rbTestData2.IsChecked ?? false))
             {
                 runTestModel();
             }
@@ -148,7 +162,7 @@ namespace SpectrometerStageControlWpf
         private void Stop()
         {
             (DataContext as SurfacePlotterModel).IsRunning = false;
-            if (useTestData2)
+            if (enableDebug && (rbTestData2.IsChecked ?? false))
                 _task = null;
         }
 

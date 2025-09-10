@@ -98,6 +98,17 @@ namespace SpectrometerStageControlWpf
             OnPropertyChanged();
         }
 
+        public void UpdateChartAxes(double xMin, double xMax, double xUnitWidth, double yMin, double yMax, double yUnitWidth)
+        {
+            XAxes[0].MinLimit = xMin;
+            XAxes[0].MaxLimit = xMax;
+            XAxes[0].UnitWidth = xUnitWidth;
+
+            YAxes[0].MinLimit = yMin;
+            YAxes[0].MaxLimit = yMax;
+            YAxes[0].UnitWidth = yUnitWidth;
+        }
+
         public void UpdateChartAxes(SpectrumData spectrumData, bool normalize)
         {
             if (normalize)

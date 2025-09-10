@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace SpectrometerStageControlWpf
 {
@@ -11,7 +12,7 @@ namespace SpectrometerStageControlWpf
     /// </summary>
     public partial class MainWindow : Window, IMainView
     {
-        private bool enableDebug = true;
+        private bool enableDebug = false;
 
         #region Class Members
         private MainPresenter presenter;
@@ -50,14 +51,11 @@ namespace SpectrometerStageControlWpf
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-                    enableDebug = !enableDebug;
-                    UpdateDisplay();
-            /*switch (e.Key)
+            if (e.Key == Key.F12 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
-                case System.Windows.Input.Key.F12:
-                    // Code to execute when F1 is pressed
-                    break;
-            }*/
+                enableDebug = !enableDebug;
+                UpdateDisplay();
+            }
         }
 
         private void setHandlers()
@@ -105,12 +103,6 @@ namespace SpectrometerStageControlWpf
                 gbStage.IsEnabled = presenter.StageConnected;
                 gbSpectrometer.IsEnabled = presenter.SpectrometerConnected;
 
-                if (gbStage.IsEnabled)
-                    UpdateStageDisplay();
-
-                if (gbSpectrometer.IsEnabled)
-                    UpdateSpectrometerDisplay();
-
                 btnTestCsv.IsEnabled = false;
                 btnSurfacePlot.IsEnabled = false;
                 btnRun.IsEnabled = (presenter.StageConnected && presenter.SpectrometerConnected);
@@ -123,12 +115,6 @@ namespace SpectrometerStageControlWpf
                 gbStage.IsEnabled = true;
                 gbSpectrometer.IsEnabled = true;
 
-                if (gbStage.IsEnabled)
-                    UpdateStageDisplay();
-
-                if (gbSpectrometer.IsEnabled)
-                    UpdateSpectrometerDisplay();
-
                 btnTestCsv.IsEnabled = true;
                 btnSurfacePlot.IsEnabled = true;
                 btnRun.IsEnabled = true;
@@ -136,6 +122,12 @@ namespace SpectrometerStageControlWpf
                 btnTestCsv.Visibility = Visibility.Visible;
                 btnSurfacePlot.Visibility = Visibility.Visible;
             }
+
+            if (gbStage.IsEnabled)
+                UpdateStageDisplay();
+
+            if (gbSpectrometer.IsEnabled)
+                UpdateSpectrometerDisplay();
         }
         public void UpdateDisplay() 
         {

@@ -182,11 +182,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SurfacePlotter\SurfacePlotterModel.cs" />
-    <Compile Include="SurfacePlotter\SurfacePlotterView.xaml.cs">
+    <Compile Include="Charts\SurfacePlotterModel.cs" />
+    <Compile Include="Charts\SurfacePlotterView.xaml.cs">
       <DependentUpon>SurfacePlotterView.xaml</DependentUpon>
     </Compile>
-    <Page Include="SpectrometerChart.xaml">
+    <Page Include="Charts\SpectrometerChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,7 +199,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Control\SpectrometerViewModel.cs" />
-    <Compile Include="SpectrometerChart.xaml.cs">
+    <Compile Include="Charts\SpectrometerChart.xaml.cs">
       <DependentUpon>SpectrometerChart.xaml</DependentUpon>
     </Compile>
     <Compile Include="Control\DataFile.cs" />
@@ -213,7 +213,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SurfacePlotter\SurfacePlotterView.xaml">
+    <Page Include="Charts\SurfacePlotterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

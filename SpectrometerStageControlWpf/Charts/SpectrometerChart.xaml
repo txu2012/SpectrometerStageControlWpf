@@ -7,8 +7,8 @@
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         xmlns:vms="clr-namespace:SpectrometerStageControlWpf"
         mc:Ignorable="d"
+        KeyDown="Window_KeyDown"
         Title="Spectrometer Chart" Height="450" Width="800">
-    <!-- <Window.DataContext><local:ViewModel/></Window.DataContext> -->
     <Grid>
 
         <lvc:CartesianChart 
@@ -20,7 +20,8 @@
             SyncContext="{Binding Sync}"/>
         <Button Name="btnUpdate" Content="Toggle Acq" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
         <CheckBox Name="chkNormalized" Content="Normalized" HorizontalAlignment="Left" Margin="103,13,0,0" VerticalAlignment="Top" IsChecked="false"/>
-        
+        <CheckBox Name="chkTestData" Content="Use Random Test Data" HorizontalAlignment="Left" Margin="198,13,0,0" VerticalAlignment="Top" IsChecked="false"/>
+
         <!-- <lvc:CartesianChart Margin="10, 35, 0, 0" Name="lvcSpectrometerChart" SyncContext="{Binding Sync}"/> -->
     </Grid>
 </Window>
