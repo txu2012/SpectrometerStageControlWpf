@@ -10,44 +10,18 @@ namespace SpectrometerStageControlWpf
     {
         private double[] wavelengths;
         private double[] intensities;
-        public double[] Wavelengths
-        {
-            get
-            {
-                return this.wavelengths;
-            }
-            set
-            {
-                this.wavelengths = value;
-            }
-        }
-        public double[] Intensities
-        {
-            get
-            {
-                return this.intensities;
-            }
-            set
-            {
-                this.intensities = value;
-            }
-        }
+        public double[] Wavelengths => this.wavelengths;
+        public double[] WavelengthsNormalized => normalize(this.wavelengths);
+        public double WavelengthMin => this.wavelengths.Min();
+        public double WavelengthMax => this.wavelengths.Max();
 
-        public double[] WavelengthsNormalized
-        {
-            get
-            {
-                return normalize(this.wavelengths);
-            }
-        }
+        public double[] Intensities => this.intensities;
+        public double[] IntensitiesNormalized => normalize(this.intensities);
+        public double IntensityMin => this.intensities.Min();
+        public double IntensityMax => this.intensities.Max();
 
-        public double[] IntensitiesNormalized
-        {
-            get
-            {
-                return normalize(this.intensities);
-            }
-        }
+
+
         private double[] normalize(double[] data)
         {
             var max = data.Max();
@@ -64,6 +38,7 @@ namespace SpectrometerStageControlWpf
         {
             return new SpectrumData(this.Wavelengths, this.Intensities);
         }
+
     }
 
     public struct FrogHeaderData 

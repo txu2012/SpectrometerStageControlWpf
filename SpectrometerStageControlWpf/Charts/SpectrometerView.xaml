@@ -8,6 +8,7 @@
         xmlns:vms="clr-namespace:SpectrometerStageControlWpf"
         mc:Ignorable="d"
         KeyDown="Window_KeyDown"
+        Closing="Window_Closing"
         Title="Spectrometer Chart" Height="450" Width="800">
     <Grid>
         <lvc:CartesianChart 

@@ -18,17 +18,13 @@ namespace SpectrometerStageControlWpf
 
     public interface IChartView : IView { }
 
-    public interface ISurfacePlotView: IView { }
-
-    
-
     public class MainPresenter
     {
         #region Class Members
         public StageControl Stage;
         public SpectrometerControl Spectrometer;
         private IMainView mainView;
-        private IChartView chartView;
+        private List<IChartView> chartViews;
 
         public List<string> StageDevices { get { return Stage.GetDevices(); } }
 
@@ -57,12 +53,11 @@ namespace SpectrometerStageControlWpf
         {
             Spectrometer = new SpectrometerControl();
             Stage = new StageControl();
+            chartViews = new List<IChartView>();
 
-            spectrumData = new SpectrumData()
-            {
-                Wavelengths = new double[] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 },
-                Intensities = new double[] { 10, 20, 30, 40, 32, 31, 22, 6, 2, 1 }
-            };
+            spectrumData = new SpectrumData(
+                new double[] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 },
+                new double[] { 10, 20, 30, 40, 32, 31, 22, 6, 2, 1 });
 
             spectrometerDevices = new List<SpectrometerDevice>();
             FrogDataManager = new FrogDataManager();
@@ -129,12 +124,18 @@ namespace SpectrometerStageControlWpf
 
         public void AddChartView(IChartView view)
         {
-            chartView = view;
+            chartViews.Add(view);
         }
 
-        public void RemoveChartView()
+        public void RemoveChartView(IChartView view)
         {
-            chartView = null;
+            chartViews.Remove(view);
+        }
+
+        public void UpdateChartViews()
+        {
+            foreach (var view in chartViews)
+                view.UpdateDisplay();
         }
 
         public void RunLength(
@@ -244,14 +245,14 @@ namespace SpectrometerStageControlWpf
             catch (Exception ex)
             {
                 mainView.Log($"Failed to acquire full spectrum from spectrometer. {ex.Message}");
-                return new SpectrumData() { Wavelengths = new double[] { }, Intensities = new double[] { } };
+                return new SpectrumData(new double[] { }, new double[] { });
             }
         }
         public void GetFullSpectrum()
         {
             spectrumData = GetFullSpectrumInternal();
 
-            if (chartView != null) chartView.UpdateDisplay();
+            if (chartViews.Count > 0) UpdateChartViews();
         }
 
         public SpectrumData GetSpectrumAtRangeInternal()
@@ -275,14 +276,14 @@ namespace SpectrometerStageControlWpf
             catch (Exception ex)
             {
                 mainView.Log($"Failed to acquire spectrum range from spectrometer. {ex.Message}");
-                return new SpectrumData() { Wavelengths = new double[] { }, Intensities = new double[] { } };
+                return new SpectrumData(new double[] { }, new double[] { });
             }
         }
         public void GetSpectrumAtRange()
         {
             spectrumData = GetSpectrumAtRangeInternal();
 
-            if (chartView != null) chartView.UpdateDisplay();
+            if (chartViews.Count > 0) UpdateChartViews();
         }
 
         public void SetIntegrationTime(long timeUs)

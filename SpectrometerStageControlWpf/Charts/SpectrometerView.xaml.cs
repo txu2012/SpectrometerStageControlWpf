@@ -29,6 +29,7 @@ namespace SpectrometerStageControlWpf
             InitializeComponent();
             this.MainPresenter = presenter;
             this.range = range;
+            MainPresenter.AddChartView(this);
 
             viewModel = new SpectrometerModel(this.MainPresenter);
 
@@ -54,6 +55,11 @@ namespace SpectrometerStageControlWpf
             tmrUpdate.Interval = new TimeSpan(0, 0, 0, 0, 100);
 
             UpdateDisplay();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainPresenter.RemoveChartView(this);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -171,5 +177,7 @@ namespace SpectrometerStageControlWpf
             btnAcquire.IsEnabled = MainPresenter.SpectrometerConnected || (enableDebug && (chkTestData.IsChecked ?? false));
         }
         #endregion
+
+        
     }
 }

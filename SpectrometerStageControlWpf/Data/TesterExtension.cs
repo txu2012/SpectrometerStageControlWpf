@@ -36,5 +36,59 @@ namespace SpectrometerStageControlWpf
 
             return data;
         }
+
+        public static List<FrogData> GenerateTestPlotPoints()
+        {
+            Random random = new Random();
+
+            double[] wavelengthsTest = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+            List<FrogData> data = new List<FrogData>();
+            for (int i = 0; i < 1; ++i)
+            {
+                // Generate different intensities for different delays
+                double[] intensitiesTest = Enumerable
+                    .Repeat(0, 10)
+                    //.Select(j => random.NextDouble())
+                    .Select(j => (double)random.Next(1, 4))
+                    .ToArray();
+
+                data.Add(new FrogData(i, new SpectrumData(wavelengthsTest, intensitiesTest)));
+            }
+
+            return data;
+        }
+
+        public static void AppendRandomSpectrumData(ref List<FrogData> src)
+        {
+            Random random = new Random();
+
+            double[] wavelengthsTest = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+            // Generate different intensities for different delays
+            double[] intensitiesTest = Enumerable
+                .Repeat(0, 10)
+                //.Select(j => random.NextDouble())
+                .Select(j => (double)random.Next(1, 4))
+                .ToArray();
+
+            src.Add(new FrogData(src.Count, new SpectrumData(wavelengthsTest, intensitiesTest)));
+        }
+
+        public static FrogData GenerateRandomFrogData(int nextIdx)
+        {
+            Random random = new Random();
+
+            double[] wavelengthsTest = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+            // Generate different intensities for different delays
+            double[] intensitiesTest = Enumerable
+                .Repeat(0, 10)
+                //.Select(j => random.NextDouble())
+                .Select(j => (double)random.Next(1, 4))
+                .ToArray();
+
+            return new FrogData(nextIdx, new SpectrumData(wavelengthsTest, intensitiesTest));
+        }
     }
 }

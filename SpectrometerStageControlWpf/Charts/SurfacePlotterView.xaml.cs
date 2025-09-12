@@ -11,7 +11,7 @@ namespace SpectrometerStageControlWpf
     /// <summary>
     /// Interaction logic for SurfacePlotterView.xaml
     /// </summary>
-    public partial class SurfacePlotterView : Window, ILabelFormatter, ISurfacePlotView
+    public partial class SurfacePlotterView : Window, ILabelFormatter, IChartView
     {
         private bool enableDebug = false;
 
@@ -25,10 +25,10 @@ namespace SpectrometerStageControlWpf
             btnStop.Click += btnStop_Click;
             btnUpdate.Click += btnUpdate_Click;
             this.presenter = presenter;
+            this.presenter.AddChartView(this);
 
             if (enableDebug)
-                presenter.FrogDataManager.GenerateTestPlotPoints();
-
+                presenter.FrogDataManager.AppendRange(TesterExtension.GenerateTestPlotPoints());
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -70,7 +70,8 @@ namespace SpectrometerStageControlWpf
         {
             (DataContext as SurfacePlotterModel).Save();
             Stop();
-
+            presenter.RemoveChartView(this);
+                
             base.OnClosing(e);
         }
 
@@ -104,7 +105,8 @@ namespace SpectrometerStageControlWpf
         {
             if (enableDebug && (rbTestData1.IsChecked ?? false))
             {
-                presenter.FrogDataManager.AppendRandomSpectrumData();
+                presenter.FrogDataManager.Append(
+                    TesterExtension.GenerateRandomFrogData(presenter.FrogDataManager.FrogData.Count));
             }
             UpdateDisplay();
         }
